@@ -71,7 +71,7 @@ cat_cols = [
     'Gender',
     'EducationLevel',
     'Smoking',
-    'FamilyHistoryAlzheimer',
+    'FamilyHistoryAlzheimers',
     'CardiovascularDisease',
     'Diabetes',
     'Depression',
@@ -224,14 +224,34 @@ from sklearn.metrics import (
     classification_report
 )
 
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
+
+lr_model = make_pipeline(
+    StandardScaler(),
+    LogisticRegression(max_iter=3000, random_state=42)
+)
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.svm import SVC
+from sklearn.calibration import CalibratedClassifierCV
+
+svm_model = make_pipeline(
+    StandardScaler(),
+    CalibratedClassifierCV(
+        SVC(),
+        method="sigmoid",
+        cv=5
+    )
+)
+
+
+
 
 models = {
-    "Logistic Regression": LogisticRegression(max_iter=1000,random_state=42),
+    "Logistic Regression": LogisticRegression(max_iter=3000, random_state=42),
     "Decision Tree": DecisionTreeClassifier(random_state=42),
     "Random Forest": RandomForestClassifier(random_state=42),
     "KNN": KNeighborsClassifier(),
@@ -265,7 +285,7 @@ results_df = results_df.sort_values(
     by="ROC-AUC",
     ascending=False
 )
-
+print(results_df)
 # results_df
 
 from sklearn.ensemble import GradientBoostingClassifier
@@ -281,6 +301,19 @@ model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
 print(y_pred)
+
+from sklearn.metrics import ConfusionMatrixDisplay
+import matplotlib.pyplot as plt
+
+ConfusionMatrixDisplay.from_predictions(
+    y_test,
+    y_pred,
+    display_labels=["Low Risk", "High Risk"],
+    cmap="Blues"
+)
+
+plt.title("Confusion Matrix - Gradient Boosting")
+plt.show()
 
 from sklearn.metrics import RocCurveDisplay
 RocCurveDisplay.from_estimator(model, X_test, y_test)

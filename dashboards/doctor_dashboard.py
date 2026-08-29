@@ -399,7 +399,7 @@ def show_predictions():
             "Confidence": f"{result[3]:.2f}%",
 
             "Alzheimer Probability":
-                f"{result[4]:.2f}%",
+                f"{result[4] * 100:.2f}%",
 
             "Date": result[5]
 
