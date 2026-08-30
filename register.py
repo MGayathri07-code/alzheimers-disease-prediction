@@ -149,19 +149,6 @@ def show_register():
                     "You can now log in."
                 )
 
-                # -----------------------------------------
-                # RETURN TO LOGIN
-                # -----------------------------------------
-
-                if st.button(
-                    " Go to Login",
-                    use_container_width=True
-                ):
-
-                    st.session_state.page = "login"
-
-                    st.rerun()
-
             else:
 
                 st.error(
